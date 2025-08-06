@@ -4,6 +4,11 @@ pipeline {
         maven "MAVEN3.9.9"
         jdk "JDK17"
     }  
+
+    environment {        
+        SONARSERVER = 'sonarserver'
+        SONARSCANNER = 'sonarscanner'
+    }
   
 
     stages {
