@@ -78,7 +78,7 @@ pipeline {
                     echo "Scan completed. Reports saved in odc-reports/"
                 '''
             }
-          }        
+                 
         }
 
         stage('Building image') {
