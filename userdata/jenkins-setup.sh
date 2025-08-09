@@ -33,3 +33,7 @@ sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin 
 
 sudo usermod -aG docker $USER
 sudo usermod -aG docker jenkins
+
+sudo system restart jenkins
+
+sudo apt-get update && sudo apt-get install -y unzip
