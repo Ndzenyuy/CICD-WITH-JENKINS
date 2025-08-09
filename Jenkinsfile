@@ -58,12 +58,11 @@ pipeline {
             }
         }
 
-       stage('OWASP Dependency Check Debug') {
+       stage('OWASP Dependency Check') {
             steps {
                 sh '''
-                echo "Current directory: $(pwd)"
-                echo "Listing workspace:"
-                ls -l
+                echo "Installing unzip..."
+                sudo apt-get update && sudo apt-get install -y unzip
 
                 echo "Downloading OWASP Dependency-Check CLI..."
                 curl -L -o dependency-check.zip https://github.com/jeremylong/DependencyCheck/releases/download/v8.4.0/dependency-check-8.4.0-release.zip
@@ -72,7 +71,6 @@ pipeline {
                 unzip -q dependency-check.zip -d dependency-check-dir
 
                 echo "Listing dependency-check-dir contents:"
-                ls -l dependency-check-dir
                 ls -l dependency-check-dir/dependency-check/bin/
 
                 echo "Setting executable permission..."
@@ -81,10 +79,18 @@ pipeline {
                 echo "Running OWASP Dependency-Check..."
                 ./dependency-check-dir/dependency-check/bin/dependency-check.sh --version || echo "Failed to run dependency-check.sh"
 
-                echo "If the above failed, the script is missing or not executable."
+                ./dependency-check-dir/dependency-check/bin/dependency-check.sh \
+                    --project "MyProject" \
+                    --scan . \
+                    --format HTML \
+                    --out owasp-report \
+                    --failOnCVSS 7 || true
+
+                echo "OWASP scan complete, reports in owasp-report/"
                 '''
             }
             }
+
 
         stage('Building image') {
             steps{
