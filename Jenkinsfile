@@ -9,7 +9,7 @@ pipeline {
         SONARSERVER = 'sonarserver'
         SONARSCANNER = 'sonarscanner'
         IMAGE_NAME = "Ndzenyuy/ecommerce-app"
-        IMAGE_TAG  = "latest"
+        IMAGE_TAG  = $BUILD_NUMBER
     }
  
 
@@ -62,7 +62,7 @@ pipeline {
             steps{
               script {
                 sh 'ls -la'
-                sh 'docker build -t jenkins-docker:latest .'
+                sh 'docker build -t $IMAGE_NAME:$IMAGE_TAG .'
               }
             }
         }  
