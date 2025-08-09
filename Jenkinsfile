@@ -59,7 +59,7 @@ pipeline {
         stage('Building image 1') {
             steps{
               script {
-                sh 'ls'
+                sh 'ls -la'
                 sh 'docker build -t jenkins-docker:latest .'
               }
             }
