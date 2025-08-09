@@ -88,7 +88,14 @@ pipeline {
                 }
                 
             }
-        }     
+        } 
+        stage('Remove Images')   {
+            steps {
+                script {
+                    sh 'docker rmi  $IMAGE_NAME:$BUILD_NUMBER'
+                }
+            }
+        }  
         
     }
 }
