@@ -59,7 +59,6 @@ pipeline {
         }
 
         stage('OWASP Dependency Check') {
-            stage('OWASP Dependency-Check CLI') {
             steps {
                 sh '''
                     echo "Downloading OWASP Dependency-Check..."
@@ -79,8 +78,7 @@ pipeline {
                     echo "Scan completed. Reports saved in odc-reports/"
                 '''
             }
-        }
-        
+          }        
         }
 
         stage('Building image') {
