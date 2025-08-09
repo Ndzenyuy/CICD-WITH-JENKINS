@@ -61,12 +61,12 @@ pipeline {
         stage('OWASP Dependency Check') {
             steps {
                 // Run OWASP Dependency-Check
-                dependencyCheck additionalArguments: '--scan . --format HTML', odcInstallation: 'owasp'
+                dependencyCheck additionalArguments: '--scan ./src --format HTML', odcInstallation: 'owasp'
                 
                 // Publish the report so you can view it in Jenkins
                 dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
             }
-        }
+        
         }
 
         stage('Building image') {
