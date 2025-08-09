@@ -58,22 +58,30 @@ pipeline {
             }
         }
 
-       stage('OWASP Dependency Check') {
+       stage('OWASP Dependency Check Debug') {
             steps {
                 sh '''
+                echo "Current directory: $(pwd)"
+                echo "Listing workspace:"
+                ls -l
+
+                echo "Downloading OWASP Dependency-Check CLI..."
                 curl -L -o dependency-check.zip https://github.com/jeremylong/DependencyCheck/releases/download/v8.4.0/dependency-check-8.4.0-release.zip
+
+                echo "Unzipping..."
                 unzip -q dependency-check.zip -d dependency-check-dir
+
+                echo "Listing dependency-check-dir contents:"
+                ls -l dependency-check-dir
                 ls -l dependency-check-dir/dependency-check/bin/
+
+                echo "Setting executable permission..."
                 chmod +x dependency-check-dir/dependency-check/bin/dependency-check.sh
 
-                ./dependency-check-dir/dependency-check/bin/dependency-check.sh \
-                    --project "MyReactApp" \
-                    --scan . \
-                    --format HTML \
-                    --out owasp-report \
-                    --failOnCVSS 7 || true
+                echo "Running OWASP Dependency-Check..."
+                ./dependency-check-dir/dependency-check/bin/dependency-check.sh --version || echo "Failed to run dependency-check.sh"
 
-                echo "OWASP scan complete, reports in owasp-report/"
+                echo "If the above failed, the script is missing or not executable."
                 '''
             }
             }
