@@ -61,21 +61,19 @@ pipeline {
         stage('OWASP Dependency Check') {
             steps {
                 sh '''
-                    echo "Downloading OWASP Dependency-Check..."
-                    wget https://github.com/jeremylong/DependencyCheck/releases/latest/download/dependency-check.zip -O dc.zip
-                    
-                    unzip -q dc.zip -d dependency-check
-                    chmod +x dependency-check/bin/dependency-check.sh
-                    
-                    echo "Running dependency-check..."
-                    dependency-check/bin/dependency-check.sh \
-                        --project "Ecommerce" \
-                        --scan ./src \
-                        --format "ALL" \
-                        --out ./odc-reports \
+                    curl -L -o dependency-check.zip https://github.com/jeremylong/DependencyCheck/releases/download/v8.4.0/dependency-check-8.4.0-release.zip
+                    unzip -q dependency-check.zip -d dependency-check-dir
+                    ls dependency-check-dir
+                    chmod +x dependency-check-dir/dependency-check/bin/dependency-check.sh
+
+                    dependency-check-dir/dependency-check/bin/dependency-check.sh \
+                        --project "MyReactApp" \
+                        --scan . \
+                        --format HTML \
+                        --out owasp-report \
                         --failOnCVSS 7 || true
-                    
-                    echo "Scan completed. Reports saved in odc-reports/"
+
+                    echo "OWASP scan complete, reports in owasp-report/"
                 '''
             }
                  
