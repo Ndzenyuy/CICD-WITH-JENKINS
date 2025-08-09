@@ -68,7 +68,7 @@ pipeline {
                 curl -L -o dependency-check.zip https://github.com/jeremylong/DependencyCheck/releases/download/v8.4.0/dependency-check-8.4.0-release.zip
 
                 echo "Unzipping..."
-                unzip -q dependency-check.zip -d dependency-check-dir
+                unzip -o -q dependency-check.zip -d dependency-check-dir
 
                 echo "Listing dependency-check-dir contents:"
                 ls -l dependency-check-dir/dependency-check/bin/
