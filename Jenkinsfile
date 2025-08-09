@@ -66,7 +66,7 @@ pipeline {
               }
             }
         }  
-        Stage('Push to Dockerhub') {
+        stage('Push to Dockerhub') {
             steps {
                 withCredentials([usernamePassword(
                     credentialsId: 'DOCKER_LOGIN',  // ID from Jenkins credentials
