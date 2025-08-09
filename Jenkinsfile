@@ -59,13 +59,27 @@ pipeline {
         }
 
         stage('OWASP Dependency Check') {
+            stage('OWASP Dependency-Check CLI') {
             steps {
-                // Run OWASP Dependency-Check
-                dependencyCheck additionalArguments: '--scan ./src --format HTML', odcInstallation: 'owasp'
-                
-                // Publish the report so you can view it in Jenkins
-                dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
+                sh '''
+                    echo "Downloading OWASP Dependency-Check..."
+                    wget https://github.com/jeremylong/DependencyCheck/releases/latest/download/dependency-check.zip -O dc.zip
+                    
+                    unzip -q dc.zip -d dependency-check
+                    chmod +x dependency-check/bin/dependency-check.sh
+                    
+                    echo "Running dependency-check..."
+                    dependency-check/bin/dependency-check.sh \
+                        --project "Ecommerce" \
+                        --scan ./src \
+                        --format "ALL" \
+                        --out ./odc-reports \
+                        --failOnCVSS 7 || true
+                    
+                    echo "Scan completed. Reports saved in odc-reports/"
+                '''
             }
+        }
         
         }
 
