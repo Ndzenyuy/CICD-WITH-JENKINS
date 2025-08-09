@@ -58,26 +58,25 @@ pipeline {
             }
         }
 
-        stage('OWASP Dependency Check') {
+       stage('OWASP Dependency Check') {
             steps {
                 sh '''
-                    curl -L -o dependency-check.zip https://github.com/jeremylong/DependencyCheck/releases/download/v8.4.0/dependency-check-8.4.0-release.zip
-                    unzip -q dependency-check.zip -d dependency-check-dir
-                    ls dependency-check-dir
-                    chmod +x dependency-check-dir/dependency-check/bin/dependency-check.sh
+                curl -L -o dependency-check.zip https://github.com/jeremylong/DependencyCheck/releases/download/v8.4.0/dependency-check-8.4.0-release.zip
+                unzip -q dependency-check.zip -d dependency-check-dir
+                ls -l dependency-check-dir/dependency-check/bin/
+                chmod +x dependency-check-dir/dependency-check/bin/dependency-check.sh
 
-                    dependency-check-dir/dependency-check/bin/dependency-check.sh \
-                        --project "MyReactApp" \
-                        --scan . \
-                        --format HTML \
-                        --out owasp-report \
-                        --failOnCVSS 7 || true
+                ./dependency-check-dir/dependency-check/bin/dependency-check.sh \
+                    --project "MyReactApp" \
+                    --scan . \
+                    --format HTML \
+                    --out owasp-report \
+                    --failOnCVSS 7 || true
 
-                    echo "OWASP scan complete, reports in owasp-report/"
+                echo "OWASP scan complete, reports in owasp-report/"
                 '''
             }
-                 
-        }
+            }
 
         stage('Building image') {
             steps{
