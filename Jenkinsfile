@@ -8,8 +8,10 @@ pipeline {
     environment {        
         SONARSERVER = 'sonarserver'
         SONARSCANNER = 'sonarscanner'
+        IMAGE_NAME = "Ndzenyuy/ecommerce-app"
+        IMAGE_TAG  = "latest"
     }
-  
+ 
 
     stages {
         stage('Build'){
@@ -63,7 +65,25 @@ pipeline {
                 sh 'docker build -t jenkins-docker:latest .'
               }
             }
-        }        
+        }  
+        Stage('Push to Dockerhub') {
+            steps {
+                withCredentials([usernamePassword(
+                    credentialsId: 'DOCKER_LOGIN',  // ID from Jenkins credentials
+                    usernameVariable: 'DOCKER_USER',
+                    passwordVariable: 'DOCKER_PASS'
+                )]){
+                    sh'''                    
+                      echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+                      docker push $IMAGE_NAME:$IMAGE_TAG
+                      docker logout                      
+                    '''
+                    
+
+                }
+                
+            }
+        }     
         
     }
 }
