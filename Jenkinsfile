@@ -59,19 +59,11 @@ pipeline {
         stage('Building image 1') {
             steps{
               script {
+                sh 'ls'
                 sh 'docker build -t jenkins-docker:latest .'
               }
             }
-        }
-
-        stage('Building image 2') {
-            steps{
-              script {
-                dockerImage = docker.build registry + ":$BUILD_NUMBER"
-              }
-            }
-        }
-        
+        }        
         
     }
 }
