@@ -9,7 +9,7 @@ pipeline {
         SONARSERVER = 'sonarserver'
         SONARSCANNER = 'sonarscanner'
         IMAGE_NAME = "Ndzenyuy/ecommerce-app"
-        IMAGE_TAG  = $BUILD_NUMBER
+        IMAGE_TAG  = "latest"
     }
  
 
@@ -62,7 +62,7 @@ pipeline {
             steps{
               script {
                 sh 'ls -la'
-                sh 'docker build -t $IMAGE_NAME:$IMAGE_TAG .'
+                sh 'docker build -t $IMAGE_NAME:$BUILD_NUMBER .'
               }
             }
         }  
@@ -75,7 +75,7 @@ pipeline {
                 )]){
                     sh'''                    
                       echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
-                      docker push $IMAGE_NAME:$IMAGE_TAG
+                      docker push $IMAGE_NAME:$BUILD_NUMBER
                       docker logout                      
                     '''
                     
