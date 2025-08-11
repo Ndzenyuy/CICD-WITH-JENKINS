@@ -107,7 +107,33 @@ pipeline {
                          sh 'trivy image -f json -o trivy-results.json $IMAGE_NAME:$BUILD_NUMBER'
                     }
                 }
-         }       
+         } 
+        stage('Push to Dockerhub') {
+            steps {
+                withCredentials([usernamePassword(
+                    credentialsId: 'DOCKER_LOGIN',  // ID from Jenkins credentials
+                    usernameVariable: 'DOCKER_USER',
+                    passwordVariable: 'DOCKER_PASS'
+                )]){
+                    sh'''                    
+                      echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+                      docker push $IMAGE_NAME:$BUILD_NUMBER
+                      docker push $IMAGE_NAME:$IMAGE_TAG
+                      docker logout                      
+                    '''                   
+                }
+                
+            }
+        } 
+        stage('Remove Images')   {
+            steps {
+                script {
+                    sh 'docker rmi  $IMAGE_NAME:$BUILD_NUMBER'
+                    sh 'docker rmi  $IMAGE_NAME:$IMAGE_TAG'
+                }
+            }
+        } 
+
         
     }
 }
