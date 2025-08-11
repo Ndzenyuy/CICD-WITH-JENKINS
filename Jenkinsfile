@@ -97,7 +97,17 @@ pipeline {
                 sh 'docker tag $IMAGE_NAME:$BUILD_NUMBER $IMAGE_NAME:$IMAGE_TAG'
               }
             }
-        }        
+        } 
+
+        stage('Trivy Scan') {
+                steps {
+                    script {
+                        sh 'trivy image --severity HIGH,CRITICAL $IMAGE_NAME:$BUILD_NUMBER' // Scan for high/critical vulnerabilities
+                        // You can also output to a file:
+                         sh 'trivy image -f json -o trivy-results.json $IMAGE_NAME:$BUILD_NUMBER'
+                    }
+                }
+         }       
         
     }
 }
