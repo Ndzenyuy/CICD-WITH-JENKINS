@@ -100,7 +100,7 @@ pipeline {
                 sh 'docker tag $IMAGE_NAME:$BUILD_NUMBER $IMAGE_NAME:$IMAGE_TAG'
               }
             }
-        }  
+        }    
         stage('Push to Dockerhub') {
             steps {
                 withCredentials([usernamePassword(
