@@ -88,7 +88,16 @@ pipeline {
                 echo "OWASP scan complete, reports in owasp-report/"
                 '''
             }
-            }       
+        }
+
+        stage('Building image') {
+            steps{
+              script {
+                sh 'docker build -t $IMAGE_NAME:$BUILD_NUMBER .'
+                sh 'docker tag $IMAGE_NAME:$BUILD_NUMBER $IMAGE_NAME:$IMAGE_TAG'
+              }
+            }
+        }        
         
     }
 }
