@@ -136,7 +136,7 @@ pipeline {
 
         stage('Update ECS Task Definition') {
             steps {
-                script {                    
+                script {
                     sh """
                         aws ecs describe-task-definition \
                         --task-definition java-cicd-task \
