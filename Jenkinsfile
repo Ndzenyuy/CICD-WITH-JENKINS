@@ -137,7 +137,7 @@ pipeline {
         stage('Update ECS Task Definition') {
             steps {
                 script {
-                    sh '''aws ecs describe-task-definition --task-definition java-cicd-task --query 'taskDefinition'--output json > task-def.json'''
+                    sh '''aws ecs describe-task-definition --task-definition java-cicd-task --query 'taskDefinition' --output json > task-def.json'''
                     def taskDefinition = readFile('task-def.json')
 
                     def newTaskDefinition = taskDefinition.replaceAll(/"image":\\s*".*?"/, '"image": "' + IMAGE_NAME + ':' + IMAGE_TAG + '"')
