@@ -134,6 +134,25 @@ pipeline {
             }
         } 
 
+        stage('Update ECS Task Definition') {
+            steps {
+                script {
+                    def taskDefinition = sh(script: 'aws ecs describe-task-definition --task-definition java-cicd-task', returnStdout: true).trim()
+                    def newTaskDefinition = taskDefinition.replaceAll(/"image":\s*".*?"/, '"image": "' + IMAGE_NAME + ':' + IMAGE_TAG + '"')
+                    writeFile file: 'new-task-definition.json', text: newTaskDefinition
+                    sh 'aws ecs register-task-definition --cli-input-json file://new-task-definition.json'
+                }
+            }
+        }
+
+        stage('Deploy to ECS') {
+            steps {
+                script {
+                    sh 'aws ecs update-service --cluster java-cicd --service java-cicd-service --force-new-deployment'
+                }
+            }
+        }
+
         
     }
 }
