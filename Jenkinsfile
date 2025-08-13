@@ -135,33 +135,27 @@ pipeline {
         } 
 
         stage('Update ECS Task Definition') {
-    steps {
-        script {
-            // Extract only the taskDefinition object from the describe output
-            sh """
-                aws ecs describe-task-definition \
-                --task-definition java-cicd-task \
-                --query 'taskDefinition' \
-                --output json > task-def.json
-            """
+            steps {
+                script {                    
+                    sh """
+                        aws ecs describe-task-definition \
+                        --task-definition java-cicd-task \
+                        --query 'taskDefinition' \
+                        --output json > task-def.json
+                    """
+                    def taskDefinition = readFile('task-def.json')
 
-            // Read JSON into Groovy string
-            def taskDefinition = readFile('task-def.json')
+                    def newTaskDefinition = taskDefinition.replaceAll(
+                        /"image":\\s*".*?"/,
+                        '"image": "' + IMAGE_NAME + ':' + IMAGE_TAG + '"'
+                    )
 
-            // Replace image in the container definition
-            def newTaskDefinition = taskDefinition.replaceAll(
-                /"image":\\s*".*?"/,
-                '"image": "' + IMAGE_NAME + ':' + IMAGE_TAG + '"'
-            )
+                    writeFile file: 'new-task-definition.json', text: newTaskDefinition
 
-            // Write back the modified task definition
-            writeFile file: 'new-task-definition.json', text: newTaskDefinition
-
-            // Register the updated task definition
-            sh 'aws ecs register-task-definition --cli-input-json file://new-task-definition.json'
+                    sh 'aws ecs register-task-definition --cli-input-json file://new-task-definition.json'
+                }
+            }
         }
-    }
-}
 
         stage('Deploy to ECS') {
             steps {
