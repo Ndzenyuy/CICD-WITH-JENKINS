@@ -35,8 +35,9 @@ sudo usermod -aG docker $USER
 sudo usermod -aG docker jenkins
 
 sudo newgrp docker
+
 sleep 30
 
-sudo system restart jenkins
+sudo systemctl restart jenkins
 
 sudo apt-get update && sudo apt-get install -y unzip
