@@ -45,10 +45,10 @@ pipeline {
             }
             steps {
                withSonarQubeEnv("${SONARSERVER}") {
-                   sh '''${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=cicd-jenkins \
-                   -Dsonar.projectName=cicd-jenkins \
+                   sh '''${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=deploy-ecs_jenkins \
+                   -Dsonar.projectName=jenkins \
                    -Dsonar.projectVersion=1.0 \
-                   -Dsonar.organization=jenkins-cicd1 \
+                   -Dsonar.organization=deploy-ecs \
                    -Dsonar.sources=src/ \
                    -Dsonar.java.binaries=target/test-classes/com/visualpathit/account/controllerTest/ \
                    -Dsonar.junit.reportsPath=target/surefire-reports/ \
