@@ -132,7 +132,7 @@ pipeline {
                     sh 'docker rmi  $IMAGE_NAME:$IMAGE_TAG'
                 }
             }
-        } 
+        }  
 
         stage('Update ECS Task Definition') {
             steps {
