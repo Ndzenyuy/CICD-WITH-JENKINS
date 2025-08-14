@@ -137,7 +137,7 @@ pipeline {
         stage('Update ECS Task Definition') {
             steps {
                 script {
-                    sh '''aws ecs describe-task-definition --task-definition java-cicd-task --query 'taskDefinition' --output json > task-def.json'''
+                    sh '''aws ecs describe-task-definition --task-definition java-cicd-task --query 'taskDefinition.{family: family, taskRoleArn: taskRoleArn, executionRoleArn: executionRoleArn, networkMode: networkMode, containerDefinitions: containerDefinitions, volumes: volumes, placementConstraints: placementConstraints, requiresCompatibilities: requiresCompatibilities, cpu: cpu, memory: memory}' --output json > task-def.json'''
                     sh 'cat task-def.json'
                     def taskDefinition = readFile('task-def.json')
 
