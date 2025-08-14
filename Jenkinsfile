@@ -144,7 +144,7 @@ pipeline {
                     def newTaskDefinition = taskDefinition.replaceAll(/"image":\\s*".*?"/, '"image": "' + IMAGE_NAME + ':' + IMAGE_TAG + '"')
 
                     writeFile file: 'new-task-definition.json', text: newTaskDefinition
-                    sh 'cat new-task-definition.jso'
+                    sh 'cat new-task-definition.json'
 
                     sh 'aws ecs register-task-definition --cli-input-json file://new-task-definition.json'
                 }
