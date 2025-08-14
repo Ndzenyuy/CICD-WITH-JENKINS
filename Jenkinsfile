@@ -154,20 +154,7 @@ pipeline {
         stage('Deploy to ECS') {
             steps {
                 script {
-                    sh 'aws ecs update-service --cluster 
-Cluster
-	
-Services
-	
-Tasks
-	
-Container instances
-	
-CloudWatch monitoring
-	
-Capacity provider strategy
-
-jenkins-cicd-cluster --service jenkins-cicd-service --force-new-deployment'
+                    sh 'aws ecs update-service --cluster jenkins-cicd-cluster --service jenkins-cicd-service --force-new-deployment'
                 }
             }
         }
