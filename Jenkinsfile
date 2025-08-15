@@ -138,13 +138,11 @@ pipeline {
             steps {
                 script {
                     sh '''aws ecs describe-task-definition --task-definition arn:aws:ecs:us-east-1:997450571655:task-definition/jenkins-cicd-task --query 'taskDefinition.{family: family, taskRoleArn: taskRoleArn, executionRoleArn: executionRoleArn, networkMode: networkMode, containerDefinitions: containerDefinitions, volumes: volumes, placementConstraints: placementConstraints, requiresCompatibilities: requiresCompatibilities, cpu: cpu, memory: memory}' --output json > task-def.json'''
-                    sh 'cat task-def.json'
+                    
                     def taskDefinition = readFile('task-def.json')
-
                     def newTaskDefinition = taskDefinition.replaceAll(/"image":\\s*".*?"/, '"image": "' + IMAGE_NAME + ':' + IMAGE_TAG + '"')
 
-                    writeFile file: 'new-task-definition.json', text: newTaskDefinition
-                    sh 'cat new-task-definition.json'
+                    writeFile file: 'new-task-definition.json', text: newTaskDefinition                 
 
                     sh 'aws ecs register-task-definition --cli-input-json file://new-task-definition.json'
                 }
@@ -158,6 +156,14 @@ pipeline {
                 }
             }
         }
+
+        post {
+            always {
+                mail to: 'ntsezevouffonelvis@gmail.com',
+                    subject: "Build #${env.BUILD_NUMBER} - ${currentBuild.currentResult}",
+                    body: "Build details: ${env.BUILD_URL}"
+            }
+    }
 
         
     }
