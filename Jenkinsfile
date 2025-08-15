@@ -157,13 +157,15 @@ pipeline {
             }            
         }
 
-        post {
-            always {
-                slackSend(
-                    channel: '#jenkinscicd',
-                    color: currentBuild.currentResult == 'SUCCESS' ? 'good' : 'danger',
-                    message: "Build ${env.JOB_NAME} #${env.BUILD_NUMBER} finished with status: ${currentBuild.currentResult}\n${env.BUILD_URL}"
-                )
+       stage('Slack Notification') {
+            steps {
+                script {
+                    slackSend(
+                        channel: '#jenkinscicd',
+                        color: currentBuild.currentResult == 'SUCCESS' ? 'good' : 'danger',
+                        message: "Build ${env.JOB_NAME} #${env.BUILD_NUMBER} finished with status: ${currentBuild.currentResult}\n${env.BUILD_URL}"
+                    )
+                }
             }
         }
   
