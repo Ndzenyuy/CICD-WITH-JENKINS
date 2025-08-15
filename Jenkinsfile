@@ -162,7 +162,7 @@ pipeline {
                 slackSend(
                     channel: '#jenkinscicd',
                     color: currentBuild.currentResult == 'SUCCESS' ? 'good' : 'danger',
-                    message: "Pipeline *${env.JOB_NAME}* #${env.BUILD_NUMBER} finished with status: *${currentBuild.currentResult}*\n${env.BUILD_URL}"
+                    message: "The recently built Pipeline *${env.JOB_NAME}* #${env.BUILD_NUMBER} finished with status: *${currentBuild.currentResult}*\n${env.BUILD_URL}"
                 )
             }
         }
