@@ -155,9 +155,10 @@ pipeline {
                     sh 'aws ecs update-service --cluster jenkins-cicd-cluster --service jenkins-cicd-service --force-new-deployment'
                 }
             }            
-        }
-
-       post {
+        }      
+  
+    }
+    post {
             always {
                 slackSend(
                     channel: '#jenkinscicd',
@@ -165,7 +166,5 @@ pipeline {
                     message: "The recently built Pipeline *${env.JOB_NAME}* #${env.BUILD_NUMBER} finished with status: *${currentBuild.currentResult}*\n${env.BUILD_URL}"
                 )
             }
-        }
-  
     }
 }
