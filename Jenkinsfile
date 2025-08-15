@@ -155,15 +155,17 @@ pipeline {
                     sh 'aws ecs update-service --cluster jenkins-cicd-cluster --service jenkins-cicd-service --force-new-deployment'
                 }
             }
+            post {
+                success {
+                    slackSend(channel: '#jenkinscicd', color: 'good', message: "✅ Build Success: ${env.JOB_NAME} #${env.BUILD_NUMBER}")
+                }
+                failure {
+                    slackSend(channel: '#jenkinscicd', color: 'danger', message: "❌ Build Failed: ${env.JOB_NAME} #${env.BUILD_NUMBER}")
+                }
+            }
         }
 
-        post {
-            always {
-                mail to: 'ntsezevouffonelvis@gmail.com',
-                    subject: "Build #${env.BUILD_NUMBER} - ${currentBuild.currentResult}",
-                    body: "Build details: ${env.BUILD_URL}"
-            }
-    }
+        
 
         
     }
