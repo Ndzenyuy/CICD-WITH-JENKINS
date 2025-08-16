@@ -104,7 +104,7 @@ pipeline {
                     script {
                         sh 'trivy image --severity HIGH,CRITICAL --format table $IMAGE_NAME:$BUILD_NUMBER' // Scan for high/critical vulnerabilities
                         // You can also output to a file:
-                         sh 'trivy image -f json -o trivy-results.json $IMAGE_NAME:$BUILD_NUMBER'
+                         sh 'trivy image $IMAGE_NAME:$BUILD_NUMBER > trivy-report.txt'
                     }
                 }
          } 
@@ -159,31 +159,32 @@ pipeline {
     }
           
     post {
-            always {
-                slackSend(
-                    channel: '#jenkinscicd',
-                    color: currentBuild.currentResult == 'SUCCESS' ? 'good' : 'danger',
-                    message: "The recently built Pipeline *${env.JOB_NAME}* #${env.BUILD_NUMBER} finished with status: *${currentBuild.currentResult}*\n${env.BUILD_URL}"
-                )
+        always {
+            slackSend(
+                channel: '#jenkinscicd',
+                color: currentBuild.currentResult == 'SUCCESS' ? 'good' : 'danger',
+                message: "The recently built Pipeline *${env.JOB_NAME}* #${env.BUILD_NUMBER} finished with status: *${currentBuild.currentResult}*\n${env.BUILD_URL}"
+            )
+        }
 
-            success {
-                emailext (
-                    to: 'your-email@example.com',
-                    subject: "SUCCESS: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
-                    body: """<p>Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' succeeded.</p>
-                    <p>Check console output at <a href='${env.BUILD_URL}'>${env.BUILD_URL}</a></p>""",
-                    mimeType: 'text/html'
-                )
-            }
-            failure {
-                emailext (
-                    to: 'your-email@example.com',
-                    subject: "FAILURE: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
-                    body: """<p>Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' failed.</p>
-                    <p>Check console output at <a href='${env.BUILD_URL}'>${env.BUILD_URL}</a></p>""",
-                    mimeType: 'text/html'
-                )
-            }
+        success {
+            emailext(
+                to: 'your-email@example.com',
+                subject: "SUCCESS: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
+                body: """<p>Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' succeeded.</p>
+                        <p>Check console output at <a href='${env.BUILD_URL}'>${env.BUILD_URL}</a></p>""",
+                mimeType: 'text/html'
+            )
+        }
+
+        failure {
+            emailext(
+                to: 'your-email@example.com',
+                subject: "FAILURE: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
+                body: """<p>Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' failed.</p>
+                        <p>Check console output at <a href='${env.BUILD_URL}'>${env.BUILD_URL}</a></p>""",
+                mimeType: 'text/html'
+            )
         }
     }
 }
