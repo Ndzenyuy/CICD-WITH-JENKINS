@@ -156,7 +156,7 @@ pipeline {
                 }
             }            
         } 
-
+    }
           
     post {
             always {
@@ -188,4 +188,5 @@ pipeline {
             )
         }
     }
+ 
 }
