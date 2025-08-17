@@ -169,7 +169,7 @@ pipeline {
 
         success {
             emailext(
-                to: 'your-email@example.com',
+                to: 'ndzenyuyjones@gmail.com',
                 subject: "SUCCESS: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
                 body: """<p>Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' succeeded.</p>
                         <p>Check console output at <a href='${env.BUILD_URL}'>${env.BUILD_URL}</a></p>""",
@@ -179,11 +179,12 @@ pipeline {
 
         failure {
             emailext(
-                to: 'your-email@example.com',
+                to: 'ndzenyuyjones@gmail.com',
                 subject: "FAILURE: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
                 body: """<p>Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' failed.</p>
                         <p>Check console output at <a href='${env.BUILD_URL}'>${env.BUILD_URL}</a></p>""",
                 mimeType: 'text/html'
+                
             )
         }
     }

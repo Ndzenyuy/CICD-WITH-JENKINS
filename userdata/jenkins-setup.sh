@@ -31,7 +31,7 @@ sudo apt-get update
 
 sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
 
-sudo usermod -aG docker $USER
+sudo usermod -aG docker ubuntu
 sudo usermod -aG docker jenkins
 
 sudo newgrp docker
@@ -40,4 +40,18 @@ sleep 30
 
 sudo systemctl restart jenkins
 
+sudo apt-get install wget apt-transport-https gnupg lsb-release
+wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -
+echo deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main | sudo tee -a /etc/apt/sources.list.d/trivy.list
+sudo apt-get update
+sudo apt-get install trivy -y
+
 sudo apt-get update && sudo apt-get install -y unzip
+apt install curl nano -y
+sudo curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"   
+sudo unzip awscliv2.zip   
+sudo ./aws/install  -y
+rm -rf awscliv2.zip
+
+
+
