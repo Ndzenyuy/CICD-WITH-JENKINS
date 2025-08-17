@@ -14,6 +14,8 @@ pipeline {
         SONAR_PROJECTKEY= 'jenkins-cicd1_project'
         SONAR_PROJECTNAME= 'project'
         SONAR_ORG= 'jenkins-cicd1'
+        ECS_CLUSTER = 'jenkins-cicd-cluster'
+        ECS_SERVICE = 'jenkins-cicd-service'
     }
  
 
@@ -156,7 +158,7 @@ pipeline {
         stage('Deploy to ECS') {
             steps {
                 script {
-                    sh 'aws ecs update-service --cluster jenkins-cicd-cluster --service jenkins-cicd-service --force-new-deployment'
+                    sh 'aws ecs update-service --cluster "$ECS_CLUSTER" --service "$ECS_SERVICE" --force-new-deployment'
                 }
             }            
         } 
