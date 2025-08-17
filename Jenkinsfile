@@ -45,10 +45,10 @@ pipeline {
             }
             steps {
                withSonarQubeEnv("${SONARSERVER}") {
-                   sh '''${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=deploy-ecs_jenkins \
-                   -Dsonar.projectName=jenkins \
+                   sh '''${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=jenkins-cicd1_project \
+                   -Dsonar.projectName=project \
                    -Dsonar.projectVersion=1.0 \
-                   -Dsonar.organization=deploy-ecs \
+                   -Dsonar.organization=jenkins-cicd1 \
                    -Dsonar.sources=src/ \
                    -Dsonar.java.binaries=target/test-classes/com/visualpathit/account/controllerTest/ \
                    -Dsonar.junit.reportsPath=target/surefire-reports/ \
@@ -184,7 +184,7 @@ pipeline {
                 body: """<p>Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' failed.</p>
                         <p>Check console output at <a href='${env.BUILD_URL}'>${env.BUILD_URL}</a></p>""",
                 mimeType: 'text/html'
-                
+
             )
         }
     }
