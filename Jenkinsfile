@@ -10,6 +10,10 @@ pipeline {
         SONARSCANNER = 'sonarscanner'
         IMAGE_NAME = 'ndzenyuy/ecommerce-app'
         IMAGE_TAG  = 'latest'
+        TASK_DEF_ARN = 'arn:aws:ecs:us-east-1:997450571655:task-definition/jenkins-cicd-task'
+        SONAR_PROJECTKEY= 'jenkins-cicd1_project'
+        SONAR_PROJECTNAME= 'project'
+        SONAR_ORG= 'jenkins-cicd1'
     }
  
 
@@ -45,10 +49,10 @@ pipeline {
             }
             steps {
                withSonarQubeEnv("${SONARSERVER}") {
-                   sh '''${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=jenkins-cicd1_project \
-                   -Dsonar.projectName=project \
+                   sh '''${scannerHome}/bin/sonar-scanner -Dsonar.projectKey="$SONAR_PROJECTKEY" \
+                   -Dsonar.projectName="$SONAR_PROJECTNAME" \
                    -Dsonar.projectVersion=1.0 \
-                   -Dsonar.organization=jenkins-cicd1 \
+                   -Dsonar.organization="$SONAR_ORG" \
                    -Dsonar.sources=src/ \
                    -Dsonar.java.binaries=target/test-classes/com/visualpathit/account/controllerTest/ \
                    -Dsonar.junit.reportsPath=target/surefire-reports/ \
@@ -137,7 +141,7 @@ pipeline {
         stage('Update ECS Task Definition') {
             steps {
                 script {
-                    sh '''aws ecs describe-task-definition --task-definition arn:aws:ecs:us-east-1:997450571655:task-definition/jenkins-cicd-task --query 'taskDefinition.{family: family, taskRoleArn: taskRoleArn, executionRoleArn: executionRoleArn, networkMode: networkMode, containerDefinitions: containerDefinitions, volumes: volumes, placementConstraints: placementConstraints, requiresCompatibilities: requiresCompatibilities, cpu: cpu, memory: memory}' --output json > task-def.json'''
+                    sh '''aws ecs describe-task-definition --task-definition "$TASK_DEF_ARN" --query 'taskDefinition.{family: family, taskRoleArn: taskRoleArn, executionRoleArn: executionRoleArn, networkMode: networkMode, containerDefinitions: containerDefinitions, volumes: volumes, placementConstraints: placementConstraints, requiresCompatibilities: requiresCompatibilities, cpu: cpu, memory: memory}' --output json > task-def.json'''
                     
                     def taskDefinition = readFile('task-def.json')
                     def newTaskDefinition = taskDefinition.replaceAll(/"image":\\s*".*?"/, '"image": "' + IMAGE_NAME + ':' + IMAGE_TAG + '"')
